@@ -1,0 +1,49 @@
+#(1) ############################################# This code using least squere method########################################
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import sklearn
+import seaborn as sns
+
+# special matplotlib argument for improved plots
+from matplotlib import rcParams
+sns.set_style("whitegrid")
+sns.set_context("poster")
+
+from sklearn.datasets import load_boston
+boston = load_boston()
+bos = pd.DataFrame(boston.data)
+bos.columns = boston.feature_names
+bos['PRICE'] = boston.target
+Z = bos.LSTAT        
+W = bos.PRICE
+z_mean = np.mean(Z)
+w_mean = np.mean(W)
+d = len(Z)
+dumerator = 0
+nenominator = 0
+for i in range(d):
+    dumerator += (Z[i] - z_mean) * (W[i] - w_mean)
+    nenominator += (Z[i] - z_mean) ** 2
+    
+o1 = dumerator / nenominator
+o0 = w_mean - (o1 * z_mean)
+z_max = np.max(Z) + 100
+z_min = np.min(Z) - 100
+
+print('Coeffie of Boston dataset ==>  B0 = ' ,o1,'B1 = ', o0)
+
+
+#(2) ############################################# This code using statsmodels method########################################
+
+
+
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+df = pd.read_csv('Boston.csv', index_col=0)
+df.head()
+lm = sm.OLS.from_formula('MV ~ LSTAT', df)
+result = lm.fit()
+result.summary()
